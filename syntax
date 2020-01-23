@@ -1,0 +1,18 @@
+local repository char(24);
+local ndx integer;
+set log_rows = 0;
+
+for (select line as defline from 'C:\Program Files\AspenTech\InfoPlus.21\db21\Group200\taglist.csv' where linenum > 1) do;
+	tagname = substring(1 of defline between ',');
+	description = substring(2 of defline between ',');
+	engunits = substring(3 of defline between ',');
+--
+-- Add engunits to the selector record ENG-UNITS if necessary
+--
+	  if engunits not in (select select_description from "eng-units") then
+		ndx = "eng-units"."#_of_selections" + 1;
+		"eng-units"."#_of_selections" = ndx;
+		"eng-units".select_description[ndx] = engunits;
+	  end
+	plantarea = substring(4 of defline between ',');
+ end
